@@ -212,9 +212,9 @@ class _HomePageState extends State<HomePage> {
               ),
               const Divider(),
               Container(
-                margin: const EdgeInsets.only(top: 5),
+                margin: const EdgeInsets.only(top:5,left: 18, right: 35),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       children: [

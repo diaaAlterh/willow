@@ -133,11 +133,11 @@ class _DoctorInfoPageState extends State<DoctorInfoPage> {
               alignment: Alignment.topCenter,
               children: [
                 Container(
-                  height: 250,
                   alignment: Alignment.topCenter,
                   child: Image.asset(
                     AppImages.appBarBackground,
                     width: MediaQuery.of(context).size.width,
+                    height: 200,
                     fit: BoxFit.fill,
                   ),
                   // color: Colors.black,
@@ -190,9 +190,9 @@ class _DoctorInfoPageState extends State<DoctorInfoPage> {
             ),
             Container(
               // color: Colors.yellow,
-              alignment: Alignment.bottomRight,
-              margin: const EdgeInsets.only(right: 20),
-              height: MediaQuery.of(context).orientation == Orientation.portrait?250:300,
+              alignment: Alignment.topRight,
+              margin: const EdgeInsets.only(top:140.0,right: 20),
+              // height: MediaQuery.of(context).orientation == Orientation.portrait?250:300,
               child: SizedBox(
                 height: 125,
                 width: 125,
@@ -201,47 +201,48 @@ class _DoctorInfoPageState extends State<DoctorInfoPage> {
                     child: Image.asset(AppImages.placeholder)),
               ),
             ),
-            Row(
-              children: [
-                SizedBox(
-                  width: 250,
-                  height: MediaQuery.of(context).orientation == Orientation.portrait?250:300,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Container(
-                          margin: const EdgeInsets.only(left: 12),
-                          width: 220,
-                          child: Row(
-                            children: [
-                              Text(
-                                name,
-                                style: const TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Image.asset(
-                                AppImages.check,
-                                height: 16,
-                                width: 16,
-                              )
-                            ],
-                          )),
-                      const SizedBox(
-                        height: 4,
-                      ),
-                      Container(
+            Container(
+              // color: Colors.yellow,
+              alignment: Alignment.topLeft,
+              margin: const EdgeInsets.only(left: 10,top:200.0),
+              child: SizedBox(
+                // width: 250,
+                // height: MediaQuery.of(context).orientation == Orientation.portrait?250:300,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Container(
                         margin: const EdgeInsets.only(left: 12),
                         width: 220,
-                        child: Text(specialization,
-                            style: const TextStyle(fontSize: 14)),
-                      ),
-                    ],
-                  ),
+                        child: Row(
+                          children: [
+                            Text(
+                              name,
+                              style: const TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Image.asset(
+                              AppImages.check,
+                              height: 16,
+                              width: 16,
+                            )
+                          ],
+                        )),
+                    const SizedBox(
+                      height: 4,
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(left: 12),
+                      width: 220,
+                      child: Text(specialization,
+                          style: const TextStyle(fontSize: 14)),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             )
 
           ],
