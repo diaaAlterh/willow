@@ -127,8 +127,8 @@ class _DoctorInfoPageState extends State<DoctorInfoPage> {
     return Column(
       children: [
         Stack(
-          alignment: Alignment.bottomCenter,
           children: [
+            const SizedBox(height: 250,),
             Stack(
               alignment: Alignment.topCenter,
               children: [
@@ -138,6 +138,7 @@ class _DoctorInfoPageState extends State<DoctorInfoPage> {
                   child: Image.asset(
                     AppImages.appBarBackground,
                     width: MediaQuery.of(context).size.width,
+                    fit: BoxFit.fill,
                   ),
                   // color: Colors.black,
                 ),
@@ -187,11 +188,24 @@ class _DoctorInfoPageState extends State<DoctorInfoPage> {
                 )
               ],
             ),
+            Container(
+              // color: Colors.yellow,
+              alignment: Alignment.bottomRight,
+              margin: const EdgeInsets.only(right: 20),
+              height: MediaQuery.of(context).orientation == Orientation.portrait?250:300,
+              child: SizedBox(
+                height: 125,
+                width: 125,
+                child: Hero(
+                    tag: 'userPhoto${widget.index}',
+                    child: Image.asset(AppImages.placeholder)),
+              ),
+            ),
             Row(
               children: [
                 SizedBox(
                   width: 250,
-                  height: 130,
+                  height: MediaQuery.of(context).orientation == Orientation.portrait?250:300,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -227,15 +241,9 @@ class _DoctorInfoPageState extends State<DoctorInfoPage> {
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 125,
-                  width: 125,
-                  child: Hero(
-                      tag: 'userPhoto${widget.index}',
-                      child: Image.asset(AppImages.placeholder)),
-                ),
               ],
             )
+
           ],
         ),
         const SizedBox(
