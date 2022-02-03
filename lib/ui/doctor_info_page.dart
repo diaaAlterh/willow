@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:willow/bloc/doctor_info_bloc.dart';
 import 'package:willow/constant/app_colors.dart';
 import 'package:willow/constant/app_images.dart';
 import 'package:willow/helper/linking_screens.dart';
+import 'package:willow/model/doctor_info_model.dart';
 import 'package:willow/widget/animation_scale_widget.dart';
 import 'package:willow/widget/category_widget.dart';
 
 class DoctorInfoPage extends StatefulWidget {
   final int index;
+  final int? doctorId;
 
-  const DoctorInfoPage(this.index, {Key? key}) : super(key: key);
+  const DoctorInfoPage(this.index, this.doctorId, {Key? key}) : super(key: key);
 
   @override
   _DoctorInfoPageState createState() => _DoctorInfoPageState();
@@ -36,51 +39,91 @@ class _DoctorInfoPageState extends State<DoctorInfoPage> {
   final ScrollController _scrollController = ScrollController();
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _getData();
+  }
+
+  _getData() {
+    doctorInfoBloc.fetch(widget.doctorId!);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          customAppBar(),
-          Expanded(
-            child: SingleChildScrollView(
-              controller: _scrollController,
-              physics: const BouncingScrollPhysics(),
-              child: Column(
+      body: StreamBuilder<DoctorInfoModel>(
+          stream: doctorInfoBloc.info,
+          builder: (context, AsyncSnapshot<DoctorInfoModel> snapshot) {
+            if (snapshot.hasData) {
+              return Column(
                 children: [
-                  rateBar(),
-                  brief(),
-                  CategoryWidget(
-                    category: category,
-                    firstOption: 'Doctor Info',
-                    secondOption: 'Work Info',
-                    firstTab: () {
-                      category = Category.doctorInfo;
-                      setState(() {});
-                    },
-                    secondTab: () {
-                      category = Category.workInfo;
-                      basicInformation = false;
-                      certificates = false;
-                      insurance = false;
-                      setState(() {});
-                    },
-                  ),
-                  (category == Category.doctorInfo)
-                      ? _doctorInfoList()
-                      : _doctorWorkInfoList(),
-                  const SizedBox(
-                    height: 20,
+                  customAppBar(
+                      name: snapshot.data?.data.information.name ?? '',
+                      specialization:
+                          snapshot.data?.data.information.specialization ?? ''),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      controller: _scrollController,
+                      physics: const BouncingScrollPhysics(),
+                      child: Column(
+                        children: [
+                          rateBar(snapshot.data?.data.information.rate ?? 1.0),
+                          brief(
+                              profileView: snapshot
+                                      .data?.data.information.profileViews ??
+                                  0,
+                              patients:
+                                  snapshot.data?.data.information.patients ?? 0,
+                              exp: snapshot.data?.data.information.experience ??
+                                  0),
+                          CategoryWidget(
+                            category: category,
+                            firstOption: 'Doctor Info',
+                            secondOption: 'Work Info',
+                            firstTab: () {
+                              category = Category.doctorInfo;
+                              setState(() {});
+                            },
+                            secondTab: () {
+                              category = Category.workInfo;
+                              basicInformation = false;
+                              certificates = false;
+                              insurance = false;
+                              setState(() {});
+                            },
+                          ),
+                          (category == Category.doctorInfo)
+                              ? _doctorInfoList()
+                              : _doctorWorkInfoList(),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
-              ),
-            ),
-          ),
-        ],
-      ),
+              );
+            }
+
+            if (snapshot.hasError) {
+              return const Center(
+                child: Text('No Internet Connection'),
+              );
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          }),
     );
   }
 
-  Widget customAppBar() {
+  Widget customAppBar({
+    required String name,
+    required String specialization,
+  }) {
     return Column(
       children: [
         Stack(
@@ -157,9 +200,9 @@ class _DoctorInfoPageState extends State<DoctorInfoPage> {
                           width: 220,
                           child: Row(
                             children: [
-                              const Text(
-                                'Doctor Eva Reid',
-                                style: TextStyle(
+                              Text(
+                                name,
+                                style: const TextStyle(
                                     fontSize: 20, fontWeight: FontWeight.bold),
                               ),
                               const SizedBox(
@@ -178,9 +221,8 @@ class _DoctorInfoPageState extends State<DoctorInfoPage> {
                       Container(
                         margin: const EdgeInsets.only(left: 12),
                         width: 220,
-                        child: const Text(
-                            'Dermatology, cosmetology and laser specialist',
-                            style: TextStyle(fontSize: 14)),
+                        child: Text(specialization,
+                            style: const TextStyle(fontSize: 14)),
                       ),
                     ],
                   ),
@@ -203,14 +245,14 @@ class _DoctorInfoPageState extends State<DoctorInfoPage> {
     );
   }
 
-  Widget rateBar() {
+  Widget rateBar(double rate) {
     return Container(
       margin: const EdgeInsets.only(left: 20),
       child: Stack(
         alignment: Alignment.bottomLeft,
         children: [
           RatingBar.builder(
-            initialRating: 4,
+            initialRating: rate,
             minRating: 1,
             direction: Axis.horizontal,
             allowHalfRating: true,
@@ -234,7 +276,8 @@ class _DoctorInfoPageState extends State<DoctorInfoPage> {
     );
   }
 
-  Widget brief() {
+  Widget brief(
+      {required int profileView, required int patients, required int exp}) {
     return Container(
       margin: const EdgeInsets.only(top: 20, right: 14, left: 14),
       height: 60,
@@ -251,7 +294,7 @@ class _DoctorInfoPageState extends State<DoctorInfoPage> {
                 height: 6,
               ),
               Text(
-                '200+',
+                '$profileView+',
                 style: TextStyle(fontSize: 20, color: AppColors.blueAccent),
               ),
             ],
@@ -271,7 +314,7 @@ class _DoctorInfoPageState extends State<DoctorInfoPage> {
                 height: 6,
               ),
               Text(
-                '120+',
+                '$patients+',
                 style: TextStyle(fontSize: 20, color: AppColors.blueAccent),
               ),
             ],
@@ -291,7 +334,7 @@ class _DoctorInfoPageState extends State<DoctorInfoPage> {
                 height: 6,
               ),
               Text(
-                '5 years',
+                '$exp years',
                 style: TextStyle(fontSize: 20, color: AppColors.blueAccent),
               ),
             ],

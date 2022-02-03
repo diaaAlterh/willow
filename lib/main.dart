@@ -18,7 +18,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Willow Care',
       debugShowCheckedModeBanner: false,
-
       theme: ThemeData(
         fontFamily: 'SFProText',
         primarySwatch: Colors.blue,

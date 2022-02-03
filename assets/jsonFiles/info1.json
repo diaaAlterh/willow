@@ -1,0 +1,16 @@
+{
+  "status":true,
+  "statusMessage":"The data received successfully",
+  "data":{
+    "information":{
+      "id":1,
+      "name":"Doctor Eva Reid",
+      "photoName":"",
+      "specialization":"Dermatology, cosmetology and laser specialist",
+      "profileViews":120,
+      "patients":200,
+      "experience":5,
+      "rate":4.0
+    }
+  }
+}

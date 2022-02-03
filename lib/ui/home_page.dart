@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:willow/bloc/schedule_bloc.dart';
 import 'package:willow/constant/app_colors.dart';
 import 'package:willow/constant/app_images.dart';
+import 'package:willow/helper/utils.dart';
+import 'package:willow/model/schedule_model.dart';
 import 'package:willow/widget/animation_scale_widget.dart';
 import 'package:willow/widget/bottom_bar_widget.dart';
 import 'package:willow/helper/linking_screens.dart';
@@ -17,6 +20,17 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   Category category = Category.accepted;
   BottomBar bottomBar = BottomBar.schedule;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _getData();
+  }
+
+  _getData() {
+    scheduleBloc.fetch();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +85,7 @@ class _HomePageState extends State<HomePage> {
             },
             secondTab: () {
               category = Category.accepted;
+              _getData();
               setState(() {});
             },
           ),
@@ -95,19 +110,43 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           if (category == Category.accepted) thisWeek(),
-          if (category == Category.accepted)
-            Expanded(
-              child: ListView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: 2,
-                  itemBuilder: (context, index) {
-                    return AnimationScaleWidget(
-                        position: index, verticalOffset: 50, child: card(index));
-                  }),
-            ),
+          if (category == Category.accepted) _schedulesList()
         ],
       ),
     );
+  }
+
+  _schedulesList() {
+    return StreamBuilder<ScheduleModel>(
+        stream: scheduleBloc.schedule,
+        builder: (context, AsyncSnapshot<ScheduleModel> snapshot) {
+          if (snapshot.hasData) {
+            return Expanded(
+              child: ListView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: snapshot.data?.data.appointment.length ?? 0,
+                  itemBuilder: (context, index) {
+                    return AnimationScaleWidget(
+                        position: index,
+                        verticalOffset: 50,
+                        child: card(
+                            index, snapshot.data?.data.appointment[index]));
+                  }),
+            );
+          }
+          if (snapshot.hasError) {
+            return const Expanded(
+              child: Center(
+                child: Text('No Internet Connection'),
+              ),
+            );
+          } else {
+            return const Expanded(
+                child: Center(
+              child: CircularProgressIndicator(),
+            ));
+          }
+        });
   }
 
   Widget thisWeek() {
@@ -129,7 +168,7 @@ class _HomePageState extends State<HomePage> {
         ));
   }
 
-  Widget card(int index) {
+  Widget card(int index, Appointment? appointment) {
     return Container(
       margin: const EdgeInsets.only(left: 20, right: 20, top: 20),
       width: MediaQuery.of(context).size.width,
@@ -138,7 +177,7 @@ class _HomePageState extends State<HomePage> {
         elevation: 0.8,
         child: InkWell(
           onTap: () {
-            linkingScreens.goToNextScreen(context, DoctorInfoPage(index));
+            linkingScreens.goToNextScreen(context, DoctorInfoPage(index,appointment?.doctorId));
           },
           child: Column(
             children: [
@@ -146,17 +185,18 @@ class _HomePageState extends State<HomePage> {
                 margin: const EdgeInsets.only(top: 8, right: 8, left: 8),
                 child: ListTile(
                   title: Text(
-                    'Eva Reid',
+                    appointment?.name ?? '',
                     style: TextStyle(
                         color: AppColors.cardTitle,
                         fontWeight: FontWeight.w600,
                         fontSize: 18),
                   ),
                   subtitle: Padding(
-                    padding: const EdgeInsets.only(top:4.0),
+                    padding: const EdgeInsets.only(top: 4.0),
                     child: Text(
-                      'Online Consultation',
-                      style: TextStyle(color: AppColors.cardTitle, fontSize: 16),
+                      appointment?.consultType ?? '',
+                      style:
+                          TextStyle(color: AppColors.cardTitle, fontSize: 16),
                     ),
                   ),
                   trailing: CircleAvatar(
@@ -186,7 +226,8 @@ class _HomePageState extends State<HomePage> {
                         const SizedBox(
                           width: 10,
                         ),
-                        const Text('November 17, 12:30 PM'),
+                        Text(utils.formatDate(
+                            'MMMM dd, hh:mm a', appointment?.time)),
                       ],
                     ),
                     Row(
@@ -198,7 +239,7 @@ class _HomePageState extends State<HomePage> {
                         const SizedBox(
                           width: 10,
                         ),
-                        const Text('Confirmed'),
+                        Text(appointment?.status ?? ''),
                       ],
                     ),
                   ],
@@ -240,7 +281,7 @@ class _HomePageState extends State<HomePage> {
                           height: 40,
                           child: Center(
                             child: Text(
-                              'Reshedule',
+                              'Reschedule',
                               style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   color: AppColors.blueAccent),

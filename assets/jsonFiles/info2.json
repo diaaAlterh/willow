@@ -1,0 +1,16 @@
+{
+  "status":true,
+  "statusMessage":"The data received successfully",
+  "data":{
+    "information":{
+      "id":2,
+      "name":"Doctor Ahmad",
+      "photoName":"",
+      "specialization":"Dermatology, cosmetology and laser specialist",
+      "profileViews":230,
+      "patients":400,
+      "experience":7,
+      "rate":3.0
+    }
+  }
+}

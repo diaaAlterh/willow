@@ -1,0 +1,16 @@
+{
+  "status":true,
+  "statusMessage":"The data received successfully",
+  "data":{
+    "information":{
+      "id":3,
+      "name":"Doctor Mohammed",
+      "photoName":"",
+      "specialization":"Dermatology, cosmetology and laser specialist",
+      "profileViews":70,
+      "patients":150,
+      "experience":3,
+      "rate":3.5
+    }
+  }
+}

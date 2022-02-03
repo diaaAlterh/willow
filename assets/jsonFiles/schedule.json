@@ -1,0 +1,32 @@
+{
+  "status":true,
+  "statusMessage": "The data received successfully",
+  "data":{
+    "appointment":[
+      {
+        "id":1,
+        "name":"Doctor Eva Reid",
+        "photoName":"",
+        "time":"2022-02-06T11:03:40.999038",
+        "consultType":"Online Consultation",
+        "status":"Confirmed"
+      },
+      {
+        "id":2,
+        "name":"Doctor Ahmad",
+        "photoName":"",
+        "time":"2022-02-08T11:03:40.999366",
+        "consultType":"Home Consultation",
+        "status":"Confirmed"
+      },
+      {
+        "id":3,
+        "name":"Doctor Mohammed",
+        "photoName":"",
+        "time":"2022-02-10T11:03:40.999399",
+        "consultType":"Online Consultation",
+        "status":"Confirmed"
+      }
+    ]
+  }
+}

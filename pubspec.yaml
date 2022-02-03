@@ -36,6 +36,10 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_rating_bar: ^4.0.0
   flutter_staggered_animations: ^1.0.0
+  rxdart: ^0.27.3
+  intl: ^0.17.0
+  dio: ^4.0.4
+  fluttertoast:
 
 
 dev_dependencies:
@@ -56,6 +60,7 @@ dev_dependencies:
 flutter:
   assets:
     - assets/images/
+    - assets/jsonFiles/
   fonts:
     - family: SFProText
       fonts:
